@@ -1,0 +1,43 @@
+Sub AlternarContrasenas()
+    Dim ws As Worksheet
+    Dim rngContrasenas As Range
+    
+    ' Hacemos referencia a la pestaña de credenciales
+    Set ws = ThisWorkbook.Sheets("Credenciales y Accesos")
+    
+    ' Definimos el rango donde están las contraseñas (Columna D, desde la fila 6 a la 30)
+    Set rngContrasenas = ws.Range("D6:D30")
+    
+    ' Desactivamos la actualización de pantalla para mejorar el rendimiento visual
+    Application.ScreenUpdating = False
+    
+    ' Si el formato actual es oculto (;;;), lo cambiamos a General para mostrarlas
+    If rngContrasenas.NumberFormat = ";;;" Then
+        rngContrasenas.NumberFormat = "General"
+        ' Cambiamos el color o estilo del botón opcionalmente si se usa una forma
+        MsgBox "Contraseñas visibles de manera temporal.", vbInformation, "Control de Accesos"
+    Else
+        ' Si están visibles, aplicamos el formato oculto
+        rngContrasenas.NumberFormat = ";;;"
+        MsgBox "Contraseñas protegidas y ocultas visualmente.", vbSystemModal, "Seguridad"
+    End If
+    
+    Application.ScreenUpdating = True
+End Sub
+
+Sub BuscarAplicacion()
+    Dim ws As Worksheet
+    Dim textoBusqueda As String
+    
+    Set ws = ThisWorkbook.Sheets("Credenciales y Accesos")
+    
+    textoBusqueda = InputBox("Escribe el nombre de la aplicación o usuario que buscas:", "Buscador Rápido de Accesos")
+    
+    If textoBusqueda <> "" Then
+        ' Aplicamos el filtro en la columna B (Aplicación) de forma dinámica
+        ws.Range("B5").AutoFilter Field:=1, Criteria1:="*" & textoBusqueda & "*"
+    Else
+        ' Si se deja vacío, limpia el filtro y muestra todo
+        If ws.FilterMode Then ws.ShowAllData
+    End If
+End Sub
